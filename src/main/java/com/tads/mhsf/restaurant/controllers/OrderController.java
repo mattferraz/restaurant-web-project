@@ -1,66 +1,82 @@
 package com.tads.mhsf.restaurant.controllers;
 
-import com.tads.mhsf.restaurant.model.entities.Dish;
-import com.tads.mhsf.restaurant.model.entities.Order;
-import com.tads.mhsf.restaurant.model.entities.PaymentMethod;
-import com.tads.mhsf.restaurant.model.repositories.DishRepository;
-import com.tads.mhsf.restaurant.model.repositories.OrderRepository;
-import com.tads.mhsf.restaurant.model.repositories.PaymentMethodRepository;
+import com.tads.mhsf.restaurant.entities.Order;
+import com.tads.mhsf.restaurant.exceptions.DataNotFoundException;
+import com.tads.mhsf.restaurant.exceptions.RepositoryException;
+import com.tads.mhsf.restaurant.services.OrderService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.time.LocalDateTime;
+import java.text.NumberFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+
 
 @Controller
 public class OrderController {
 
+    static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+    static final NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance();
+
+    private final OrderService orderService;
+
+    public OrderController(OrderService orderService) {
+        this.orderService = orderService;
+    }
+
     @RequestMapping("/orders")
     public String orders(Model model) {
-        List<Order> orders = new OrderRepository().readAll();
-        model.addAttribute("orders", orders);
-        model.addAttribute("dateTimeFormatter", RestaurantController.formatter);
-        model.addAttribute("currencyFormatter", RestaurantController.currencyFormatter);
+        try {
+            List<Order> orders = orderService.findAllOrders();
+            model.addAttribute("orders", orders);
+            model.addAttribute("dateTimeFormatter", formatter);
+            model.addAttribute("currencyFormatter", currencyFormatter);
+        } catch (RepositoryException e) {
+            model.addAttribute("msg", e.getMessage());
+        }
         return "orders";
     }
 
     @RequestMapping("/order/{orderID}")
     public String order(Model model, @PathVariable("orderID") int orderID) {
-        Order order = new OrderRepository().read(orderID);
-        model.addAttribute("order", order);
-        model.addAttribute("dateTimeFormatter", RestaurantController.formatter);
-        model.addAttribute("currencyFormatter", RestaurantController.currencyFormatter);
+        try {
+            Order order = orderService.findOrderByID(orderID);
+            model.addAttribute("order", order);
+            model.addAttribute("dateTimeFormatter", formatter);
+            model.addAttribute("currencyFormatter", currencyFormatter);
+        } catch (DataNotFoundException | RepositoryException e) {
+            model.addAttribute("msg", e.getMessage());
+        }
         return "order";
     }
 
     @RequestMapping("/my/orders")
     public String customerOrders(Model model) {
-        List<Order> customerOrders = new OrderRepository().readAll(RestaurantController.userLoggedIn.getCpf());
-        model.addAttribute("customerOrders", customerOrders);
-        model.addAttribute("dateTimeFormatter", RestaurantController.formatter);
-        model.addAttribute("currencyFormatter", RestaurantController.currencyFormatter);
+        try {
+            List<Order> customerOrders = orderService.findAllOrdersFromCustomerLoggedIn();
+            model.addAttribute("customerOrders", customerOrders);
+            model.addAttribute("dateTimeFormatter", formatter);
+            model.addAttribute("currencyFormatter", currencyFormatter);
+        } catch (RepositoryException e) {
+            model.addAttribute("msg", e.getMessage());
+        }
         return "customer_orders";
     }
 
     @RequestMapping("/order/{dishID}/confirm")
-    public String confirmOrder(Model model, @PathVariable("dishID") int dishID, int paymentID, String note) {
-        Order order = new Order();
-
-        order.setCustomer(RestaurantController.userLoggedIn);
-        order.setPaymentMethod(new PaymentMethodRepository().read(paymentID));
-        order.setDateTime(LocalDateTime.now());
-        order.setNote(note);
-
-        Dish dish = new DishRepository().read(dishID);
-        order.setDish(dish);
-        order.setPrice(dish.getPrice());
-
-        new OrderRepository().create(order);
-
-        model.addAttribute("msg", "Pedido realizado com sucesso!");
-
+    public String confirmOrder(RedirectAttributes redirectAttributes,
+                               @PathVariable int dishID,
+                               int paymentID,
+                               String note) {
+        try {
+            orderService.createOrder(dishID, paymentID, note);
+            redirectAttributes.addFlashAttribute("msg", "Order placed successfully!");
+        } catch (DataNotFoundException | RepositoryException e) {
+            redirectAttributes.addFlashAttribute("msg", e.getMessage());
+        }
         return "redirect:/dishes";
     }
 }

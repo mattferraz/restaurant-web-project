@@ -11,10 +11,11 @@
     <title>New Payment Method</title>
 </head>
 <body>
-<h1>Novo Método de Pagamento</h1>
+<h1>New Payment Method</h1>
+<a href="${pageContext.request.contextPath}/adm/home">Back</a>
 <form method="post" action="${pageContext.request.contextPath}/payment/register/confirm">
-    Descrição:<input name="description" type="text" required>
-    <input type="submit" value="Criar">
+    Name: <input name="name" type="text" required>
+    <input type="submit" value="Create">
 </form>
 </body>
 </html>

@@ -8,29 +8,30 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Detalhes do Pedido</title>
+    <title>Order Details</title>
 </head>
 <body>
-<h1>Detalhes do Pedido</h1>
+<h1>Order Details</h1>
+<a href="${pageContext.request.contextPath}/orders">Back</a>
 <section>
     <h4>ID: ${order.id}</h4>
-    <h4>Data e Horário: ${order.dateTime.format(dateTimeFormatter)}</h4>
-    <h4>Preço Total: ${currencyFormatter.format(order.price)}</h4>
-    <h4>Forma de Pagamento: ${order.paymentMethod.description}</h4>
-    <h4>Observação: ${order.note}</h4>
+    <h4>Date and Time: ${order.dateTime.format(dateTimeFormatter)}</h4>
+    <h4>Final Price: ${currencyFormatter.format(order.price)}</h4>
+    <h4>Payment Method: ${order.paymentMethod.name}</h4>
+    <h4>Note: ${order.note}</h4>
 </section>
-<h1>Cliente</h1>
+<h1>Customer</h1>
 <section>
-    <h4>Nome: ${order.customer.name}</h4>
-    <h4>Email: ${order.customer.email}</h4>
-    <h4>CPF: ${order.customer.cpf}</h4>
-    <h4>Telefone: ${order.customer.phoneNumber}</h4>
+    <h4>Name: ${order.user.name}</h4>
+    <h4>Email: ${order.user.email}</h4>
+    <h4>CPF: ${order.user.cpf}</h4>
+    <h4>Phone Number: ${order.user.phoneNumber}</h4>
 </section>
-<h1>Prato</h1>
+<h1>Dish</h1>
 <section>
-    <h4>Nome: ${order.dish.name}</h4>
-    <h4>Preço: ${currencyFormatter.format(order.dish.price)}</h4>
-    <h4>Descrição: ${order.dish.description}</h4>
+    <h4>Name: ${order.dish.name}</h4>
+    <h4>Price: ${currencyFormatter.format(order.dish.price)}</h4>
+    <h4>Description: ${order.dish.description}</h4>
 </section>
 </body>
 </html>

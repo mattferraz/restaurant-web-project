@@ -1,11 +1,11 @@
-package com.tads.mhsf.restaurant.model.entities;
+package com.tads.mhsf.restaurant.entities;
 
 import java.time.LocalDateTime;
 
 public class Order {
 
     private int id;
-    private Customer customer;
+    private User user;
     private Dish dish;
     private PaymentMethod paymentMethod;
     private LocalDateTime dateTime;
@@ -16,8 +16,8 @@ public class Order {
         return id;
     }
 
-    public Customer getCustomer() {
-        return customer;
+    public User getUser() {
+        return user;
     }
 
     public Dish getDish() {
@@ -44,8 +44,8 @@ public class Order {
         this.id = id;
     }
 
-    public void setCustomer(Customer customer) {
-        this.customer = customer;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public void setDish(Dish dish) {

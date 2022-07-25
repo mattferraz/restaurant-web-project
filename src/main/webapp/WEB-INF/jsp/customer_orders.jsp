@@ -12,21 +12,22 @@
     <title>My Orders</title>
 </head>
 <body>
-<h1>Meus Pedidos</h1>
+<h1>My Orders</h1>
+<a href="${pageContext.request.contextPath}/dishes">Back</a>
 <table border="1">
     <tr>
-        <th>Prato</th>
-        <th>Data e Horário</th>
-        <th>Preço</th>
-        <th>Pagamento</th>
-        <th>Observação</th>
+        <th>Dish</th>
+        <th>Date and Time</th>
+        <th>Price</th>
+        <th>Payment</th>
+        <th>Note</th>
     </tr>
     <c:forEach items="${customerOrders}" var="customerOrder">
         <tr>
             <td>${customerOrder.dish.name}</td>
             <td>${customerOrder.dateTime.format(dateTimeFormatter)}</td>
             <td>${currencyFormatter.format(customerOrder.price)}</td>
-            <td>${customerOrder.paymentMethod.description}</td>
+            <td>${customerOrder.paymentMethod.name}</td>
             <td>${customerOrder.note}</td>
         </tr>
     </c:forEach>

@@ -1,12 +1,18 @@
-package com.tads.mhsf.restaurant.model.entities;
+package com.tads.mhsf.restaurant.entities;
 
-public class Customer {
+public class User {
 
+    private int id;
     private String cpf;
     private String name;
     private String phoneNumber;
     private String email;
     private String password;
+    private UserType userType;
+
+    public int getId() {
+        return id;
+    }
 
     public String getCpf() {
         return cpf;
@@ -26,6 +32,14 @@ public class Customer {
 
     public String getPassword() {
         return password;
+    }
+
+    public UserType getUserType() {
+        return userType;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public void setCpf(String cpf) {
@@ -48,4 +62,7 @@ public class Customer {
         this.password = password;
     }
 
+    public void setUserType(UserType userType) {
+        this.userType = userType;
+    }
 }

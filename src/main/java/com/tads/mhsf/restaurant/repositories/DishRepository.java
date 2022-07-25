@@ -1,19 +1,22 @@
-package com.tads.mhsf.restaurant.model.repositories;
+package com.tads.mhsf.restaurant.repositories;
 
-import com.tads.mhsf.restaurant.model.dao.ConnectionManager;
-import com.tads.mhsf.restaurant.model.entities.Dish;
+import com.tads.mhsf.restaurant.entities.Dish;
+import com.tads.mhsf.restaurant.dao.ConnectionManager;
+import com.tads.mhsf.restaurant.exceptions.RepositoryException;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
-public class DishRepository implements Repository<Dish, Integer>{
+@org.springframework.stereotype.Repository
+public class DishRepository implements Repository<Dish>{
 
     @Override
-    public void create(Dish dish) {
-        String sql = "INSERT INTO prato(name, description, price) VALUES (?, ?, ?)";
+    public void create(Dish dish) throws RepositoryException {
+        String sql = "INSERT INTO dish(name, description, price) VALUES (?, ?, ?)";
         try {
             PreparedStatement pstm = ConnectionManager.getConnection().prepareStatement(sql);
 
@@ -24,21 +27,21 @@ public class DishRepository implements Repository<Dish, Integer>{
             pstm.execute();
             pstm.close();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RepositoryException();
         }
-
     }
 
     @Override
-    public Dish read(Integer id) {
-        String sql = "SELECT * FROM prato WHERE id=?";
-        Dish dish = new Dish();
+    public Optional<Dish> read(int id) throws RepositoryException {
+        String sql = "SELECT * FROM dish WHERE id=?";
+        Dish dish = null;
         try {
             PreparedStatement pstm = ConnectionManager.getConnection().prepareStatement(sql);
             pstm.setInt(1, id);
 
             ResultSet result = pstm.executeQuery();
-            while (result.next()) {
+            if (result.next()) {
+                dish = new Dish();
                 dish.setId(id);
                 dish.setName(result.getString("name"));
                 dish.setDescription(result.getString("description"));
@@ -46,15 +49,15 @@ public class DishRepository implements Repository<Dish, Integer>{
             }
             pstm.close();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RepositoryException();
         }
 
-        return dish;
+        return Optional.ofNullable(dish);
     }
 
     @Override
-    public void update(Dish dish) {
-        String sql = "UPDATE prato SET name=?, description=?, price=? WHERE id=?";
+    public void update(Dish dish) throws RepositoryException {
+        String sql = "UPDATE dish SET name=?, description=?, price=? WHERE id=?";
         try {
             PreparedStatement pstm = ConnectionManager.getConnection().prepareStatement(sql);
             pstm.setString(1, dish.getName());
@@ -65,13 +68,13 @@ public class DishRepository implements Repository<Dish, Integer>{
             pstm.executeUpdate();
             pstm.close();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RepositoryException();
         }
     }
 
     @Override
-    public void delete(Integer id) {
-        String sql = "DELETE FROM prato WHERE id=?";
+    public void delete(int id) throws RepositoryException {
+        String sql = "DELETE FROM dish WHERE id=?";
         try {
             PreparedStatement pstm = ConnectionManager.getConnection().prepareStatement(sql);
             pstm.setInt(1, id);
@@ -79,18 +82,18 @@ public class DishRepository implements Repository<Dish, Integer>{
             pstm.execute();
             pstm.close();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RepositoryException();
         }
     }
 
     @Override
-    public List<Dish> readAll() {
-        String sql = "SELECT * FROM prato";
+    public List<Dish> readAll() throws RepositoryException {
+        String sql = "SELECT * FROM dish";
         List<Dish> dishes = new ArrayList<>();
         try {
             PreparedStatement pstm = ConnectionManager.getConnection().prepareStatement(sql);
-            ResultSet result = pstm.executeQuery();
 
+            ResultSet result = pstm.executeQuery();
             while (result.next()) {
                 Dish dish = new Dish();
                 dish.setId(result.getInt("id"));
@@ -99,11 +102,11 @@ public class DishRepository implements Repository<Dish, Integer>{
                 dish.setPrice(result.getDouble("price"));
                 dishes.add(dish);
             }
-
             pstm.close();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RepositoryException();
         }
+
         return dishes;
     }
 

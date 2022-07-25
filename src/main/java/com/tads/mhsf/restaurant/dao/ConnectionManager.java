@@ -1,4 +1,4 @@
-package com.tads.mhsf.restaurant.model.dao;
+package com.tads.mhsf.restaurant.dao;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

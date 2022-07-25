@@ -1,68 +1,73 @@
-package com.tads.mhsf.restaurant.model.repositories;
+package com.tads.mhsf.restaurant.repositories;
 
-import com.tads.mhsf.restaurant.model.dao.ConnectionManager;
-import com.tads.mhsf.restaurant.model.entities.PaymentMethod;
+import com.tads.mhsf.restaurant.dao.ConnectionManager;
+import com.tads.mhsf.restaurant.entities.PaymentMethod;
+import com.tads.mhsf.restaurant.exceptions.RepositoryException;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
-public class PaymentMethodRepository implements Repository<PaymentMethod, Integer>{
+@org.springframework.stereotype.Repository
+public class PaymentMethodRepository implements Repository<PaymentMethod>{
 
     @Override
-    public void create(PaymentMethod paymentMethod) {
-        String sql = "INSERT INTO forma_pagamento(description) VALUES (?)";
+    public void create(PaymentMethod paymentMethod) throws RepositoryException {
+        String sql = "INSERT INTO payment_method(name) VALUES (?)";
         try {
             PreparedStatement pstm = ConnectionManager.getConnection().prepareStatement(sql);
-            pstm.setString(1, paymentMethod.getDescription());
+            pstm.setString(1, paymentMethod.getName());
 
             pstm.execute();
             pstm.close();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RepositoryException();
         }
-
     }
 
     @Override
-    public PaymentMethod read(Integer id) {
-        String sql = "SELECT * FROM forma_pagamento WHERE id=?";
-        PaymentMethod paymentMethod = new PaymentMethod();
+    public Optional<PaymentMethod> read(int id) throws RepositoryException {
+        String sql = "SELECT * FROM payment_method WHERE id=?";
+        PaymentMethod paymentMethod = null;
         try {
             PreparedStatement pstm = ConnectionManager.getConnection().prepareStatement(sql);
             pstm.setInt(1, id);
+
             ResultSet result = pstm.executeQuery();
-            while (result.next()) {
+            if (result.next()) {
+                paymentMethod = new PaymentMethod();
                 paymentMethod.setId(id);
-                paymentMethod.setDescription(result.getString("description"));
+                paymentMethod.setName(result.getString("name"));
             }
             pstm.close();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RepositoryException();
         }
-        return paymentMethod;
+
+        return Optional.ofNullable(paymentMethod);
     }
 
     @Override
-    public void update(PaymentMethod paymentMethod) {
-        String sql = "UPDATE forma_pagamento SET description=? WHERE id=?";
+    public void update(PaymentMethod paymentMethod) throws RepositoryException {
+        String sql = "UPDATE payment_method SET name=? WHERE id=?";
         try {
             PreparedStatement pstm = ConnectionManager.getConnection().prepareStatement(sql);
-            pstm.setString(1, paymentMethod.getDescription());
+            pstm.setString(1, paymentMethod.getName());
             pstm.setInt(2, paymentMethod.getId());
 
             pstm.executeUpdate();
             pstm.close();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RepositoryException();
         }
     }
 
     @Override
-    public void delete(Integer id) {
-        String sql = "DELETE FROM forma_pagamento WHERE id=?";
+    public void delete(int id) throws RepositoryException {
+        String sql = "DELETE FROM payment_method WHERE id=?";
         try {
             PreparedStatement pstm = ConnectionManager.getConnection().prepareStatement(sql);
             pstm.setInt(1, id);
@@ -70,27 +75,29 @@ public class PaymentMethodRepository implements Repository<PaymentMethod, Intege
             pstm.execute();
             pstm.close();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RepositoryException();
         }
     }
 
     @Override
-    public List<PaymentMethod> readAll() {
-        String sql = "SELECT * FROM forma_pagamento";
+    public List<PaymentMethod> readAll() throws RepositoryException {
+        String sql = "SELECT * FROM payment_method";
         List<PaymentMethod> paymentMethods = new ArrayList<>();
         try {
             PreparedStatement pstm = ConnectionManager.getConnection().prepareStatement(sql);
+
             ResultSet result = pstm.executeQuery();
             while (result.next()) {
                 PaymentMethod paymentMethod = new PaymentMethod();
                 paymentMethod.setId(result.getInt("id"));
-                paymentMethod.setDescription(result.getString("description"));
+                paymentMethod.setName(result.getString("name"));
                 paymentMethods.add(paymentMethod);
             }
             pstm.close();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RepositoryException();
         }
+
         return paymentMethods;
     }
 

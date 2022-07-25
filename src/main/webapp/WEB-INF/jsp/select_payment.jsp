@@ -12,15 +12,15 @@
     <title>Payment</title>
 </head>
 <body>
-<h1>Pagamento</h1>
+<h1>Payment</h1>
 <form method="post" action="${pageContext.request.contextPath}/order/${dishID}/confirm">
-    Método de Pagamento: <select name="paymentID">
+    Payment Method: <select name="paymentID">
         <c:forEach items="${paymentMethods}" var="paymentMethod">
-            <option name="paymentID" value="${paymentMethod.id}">${paymentMethod.description}</option>
+            <option name="paymentID" value="${paymentMethod.id}">${paymentMethod.name}</option>
         </c:forEach>
     </select><br/>
-    Observação: <textarea name="note"></textarea><br/>
-    <input type="submit" value="Realizar Pedido">
+    Note: <textarea name="note"></textarea><br/>
+    <input type="submit" value="Finish">
 </form>
 </body>
 </html>

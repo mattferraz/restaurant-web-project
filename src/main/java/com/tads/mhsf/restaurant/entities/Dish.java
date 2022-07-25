@@ -1,4 +1,4 @@
-package com.tads.mhsf.restaurant.model.entities;
+package com.tads.mhsf.restaurant.entities;
 
 public class Dish {
 

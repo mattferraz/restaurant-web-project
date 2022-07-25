@@ -11,10 +11,10 @@
     <title>Home</title>
 </head>
 <body>
-    <h1>O que você deseja fazer?</h1>
-    <a href="${pageContext.request.contextPath}/orders">Visualizar Pedidos</a><br/>
-    <a href="${pageContext.request.contextPath}/customers">Visualizar Clientes</a><br/>
-    <a href="${pageContext.request.contextPath}/registerDish/form">Cadastrar Prato</a><br/>
-    <a href="${pageContext.request.contextPath}/payment/register">Cadastrar Formas de Pagamento</a>
+    <h1>MENU</h1>
+    <a href="${pageContext.request.contextPath}/orders">View Orders</a><br/>
+    <a href="${pageContext.request.contextPath}/customers">View Customers</a><br/>
+    <a href="${pageContext.request.contextPath}/registerDish/form">Register Dish</a><br/>
+    <a href="${pageContext.request.contextPath}/payment/register">Register Payment Methods</a>
 </body>
 </html>

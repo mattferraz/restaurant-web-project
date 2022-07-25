@@ -11,9 +11,13 @@
     <title>The Restaurant</title>
 </head>
 <body>
-<h1>Bem vindo ao The Restaurant!</h1>
+<h1>The Restaurant</h1>
 <h2>${msg}</h2>
-<a href="${pageContext.request.contextPath}/signin">Realizar Login</a><br/>
-<a href="${pageContext.request.contextPath}/signup">Realizar Cadastro</a>
+<form method="post" action="${pageContext.request.contextPath}/validate/login">
+    Email: <input type="text" name="email" required><br/>
+    Password: <input type="password" name="password" required><br/>
+    <input type="submit" value="Continue">
+</form>
+<a href="${pageContext.request.contextPath}/signup">Don't have an account? Sign Up!</a>
 </body>
 </html>

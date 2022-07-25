@@ -12,17 +12,19 @@
     <title>Customers</title>
 </head>
 <body>
-<h1>Clientes</h1>
-<a href="${pageContext.request.contextPath}/home">Voltar</a>
+<h1>Customers</h1>
+<a href="${pageContext.request.contextPath}/adm/home">Back</a>
 <table border="1">
     <tr>
+        <th>ID</th>
         <th>CPF</th>
-        <th>Nome</th>
-        <th>Telefone</th>
+        <th>Name</th>
+        <th>Phone Number</th>
         <th>Email</th>
     </tr>
     <c:forEach items="${customers}" var="customer">
         <tr>
+            <th>${customer.id}</th>
             <td>${customer.cpf}</td>
             <td>${customer.name}</td>
             <td>${customer.phoneNumber}</td>
