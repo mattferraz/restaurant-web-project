@@ -12,13 +12,28 @@ The Restaurant is a simple restaurant web system created for both customers and 
 
 This project persists the relevant data using PostgreSQL. Thus, to successfully build it, you have to create the restaurant database and the tables.
 
-Assuming that you have PostgreSQL properly installed and configured on your machine, simple run the following commands in your terminal or in a database management system of your choice.
+Assuming that you have PostgreSQL properly installed and configured on your machine, simple run the following commands in your terminal (recommended) or in a database management system of your choice (you would have to make some adjustments).
 
-**OBS**: CPF is the unique identifier of brazilian citizens. It's like the SSN used in the United States.
-
+**1) Run PostgreSQL**
+* For Linux users:
+```
+sudo -u postgres psql
+```
+* For Windows users:
+```
+psql -U postgres
+```
+**2) Create the database:**
 ```sql
 CREATE DATABASE restaurant;
-
+```
+**3) Connect to it:**
+```
+\c restaurant
+```
+**4) Create the database tables:**
+* **OBS**: CPF is the unique identifier of brazilian citizens. It's like the SSN used in the United States.
+```sql
 CREATE TABLE app_user(
 	id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY, 
 	cpf CHAR(11) UNIQUE NOT NULL, 
